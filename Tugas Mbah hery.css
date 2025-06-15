@@ -1,1006 +1,991 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1" />
-  <title>Mathematics Game - GitHub Inspired</title>
-  <meta name="description" content="A premium modern mathematics game app with GitHub-inspired UI, responsive design, accessibility, night mode, notifications and keyboard shortcuts." />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <style>
-    /* Reset and base */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    html {
-      font-size: 16px;
-      scroll-behavior: smooth;
-    }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-      background-color: var(--bg);
-      color: var(--fg);
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    :focus-visible {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    /* CSS variables for light and dark */
-    :root {
-      --accent: #0366d6;
-      --success: #28a745;
-      --danger: #d73a49;
-      --warning: #f66a0a;
-      --bg: #ffffff;
-      --fg: #24292e;
-      --bg-glass: rgba(255 255 255 / 0.75);
-      --shadow-glass: rgba(0 0 0 / 0.05);
-      --scrollbar-thumb: rgba(3,102,214,0.4);
-      --scrollbar-thumb-hover: rgba(3,102,214,0.7);
-      --input-border: #d0d7de;
-      --input-bg: #f6f8fa;
-      --input-fg: #24292e;
-      --notify-bg: #0366d6;
-      --notify-fg: #ffffff;
-      --button-bg: #0366d6;
-      --button-fg: #ffffff;
-      --button-hover-bg: #0356b6;
-      --header-bg: rgba(255 255 255 / 0.75);
-      --footer-bg: rgba(246 248 250 / 0.85);
-      --sidebar-bg: rgba(250 250 250 / 0.9);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --accent: #58a6ff;
-        --success: #3fb950;
-        --danger: #f85149;
-        --warning: #ffa657;
-        --bg: #0d1117;
-        --fg: #c9d1d9;
-        --bg-glass: rgba(13 17 23 / 0.8);
-        --shadow-glass: rgba(0 0 0 / 0.8);
-        --scrollbar-thumb: rgba(88,166,255,0.4);
-        --scrollbar-thumb-hover: rgba(88,166,255,0.7);
-        --input-border: #30363d;
-        --input-bg: #161b22;
-        --input-fg: #c9d1d9;
-        --notify-bg: #58a6ff;
-        --notify-fg: #0d1117;
-        --button-bg: #238636;
-        --button-fg: #e6edf3;
-        --button-hover-bg: #2ea043;
-        --header-bg: rgba(13 17 23 / 0.95);
-        --footer-bg: rgba(21 25 31 / 0.85);
-        --sidebar-bg: rgba(12 17 22 / 0.9);
-      }
-    }
-    /* Scrollbar style */
-    ::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb);
-      border-radius: 8px;
-      border: 3px solid transparent;
-      background-clip: content-box;
-      transition: background-color 0.3s ease;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: var(--scrollbar-thumb-hover);
-    }
-
-    /* Layout variables */
-    :root {
-      --header-height: 64px;
-      --sidebar-width: 280px;
-      --footer-height: 48px;
-      --gap: 16px;
-      --radius: 12px;
-      --shadow: 0 4px 12px rgba(0,0,0,0.1);
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    body, #app {
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    #app {
-      display: grid;
-      grid-template-areas: 
-        "header header"
-        "sidebar main"
-        "footer footer";
-      grid-template-columns: var(--sidebar-width) 1fr;
-      grid-template-rows: var(--header-height) 1fr var(--footer-height);
-      background: var(--bg);
-      color: var(--fg);
-    }
-
-    /* Responsive layout adjustments */
-    @media (max-width: 1023px) {
-      #app {
-        grid-template-columns: 60px 1fr;
-      }
-    }
-    @media (max-width: 767px) {
-      #app {
-        grid-template-columns: 1fr;
-        grid-template-areas: 
-          "header"
-          "main"
-          "footer";
-      }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Geometri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        body {
+          font-family: 'Rajdhani', sans-serif;
+          background: linear-gradient(135deg, #121212, #0d0221);
+          min-height: 100vh;
+          color: #ffffff;
+             }        
+    
+        h1, h2, h3, .cyber-font {
+          font-family: 'Orbitron', sans-serif;
     }
     
-    /* Header */
-    header#app-header {
-      grid-area: header;
-      position: sticky;
-      top: 0;
-      height: var(--header-height);
-      background: var(--header-bg);
-      backdrop-filter: saturate(180%) blur(20px);
-      box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 var(--gap);
-      z-index: 100;
+    .cyber-border {
+        position: relative;
+        border: 1px solid rgba(5, 217, 232, 0.3);
     }
-
-    /* Brand and nav area */
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    
+    .cyber-border::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border: 1px solid rgba(255, 42, 109, 0.3);
+        z-index: -1;
     }
-    .brand img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      box-shadow: var(--shadow);
-      object-fit: cover;
-      user-select: none;
+    
+    .cyber-border::after {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        border: 1px solid rgba(211, 0, 197, 0.2);
+        z-index: -2;
     }
-    .brand h1 {
-      font-size: clamp(1.25rem, 2vw, 1.75rem);
-      font-weight: 700;
-      color: var(--accent);
-      user-select: none;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+    .cyber-panel {
+        background: rgba(26, 26, 26, 0.8);
+        border: 1px solid rgba(5, 217, 232, 0.5);
+        box-shadow: 0 0 10px rgba(5, 217, 232, 0.2);
+        backdrop-filter: blur(5px);
     }
-
-    /* Header right controls */
-    #header-controls {
-      display: flex;
-      align-items: center;
-      gap: 16px;
+    
+    .cyber-button {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
     }
-
-    button, .btn {
-      font-family: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      background: var(--button-bg);
-      color: var(--button-fg);
-      border: none;
-      padding: 8px 14px;
-      border-radius: var(--radius);
-      transition: background-color var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.875rem;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+    
+    .cyber-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.6s ease;
     }
-    button:focus-visible, .btn:focus-visible {
-      outline-offset: 4px;
+    
+    .cyber-button:hover::before {
+        left: 100%;
     }
-    button:hover, .btn:hover {
-      background-color: var(--button-hover-bg);
+    
+    .shape {
+        transition: all 0.3s ease;
     }
-    button:disabled, .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    
+    .shape:hover {
+        transform: scale(1.05);
     }
-
-    /* Icon styling */
-    .material-icons {
-      font-size: 20px;
-      font-weight: normal;
-      user-select: none;
+    
+    .option {
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
     }
-
-    /* Sidebar */
-    aside#app-sidebar {
-      grid-area: sidebar;
-      background: var(--sidebar-bg);
-      box-shadow: inset -1px 0 0 #d0d7de;
-      display: flex;
-      flex-direction: column;
-      padding: var(--gap);
-      gap: var(--gap);
-      overflow-y: auto;
-      transition: transform 0.3s ease;
+    
+    .option::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #05d9e8;
+        transition: width 0.3s ease;
     }
-
-    @media (max-width: 767px) {
-      aside#app-sidebar {
-        position: fixed;
-        top: var(--header-height);
-        bottom: var(--footer-height);
-        width: var(--sidebar-width);
-        z-index: 150;
-        background: var(--sidebar-bg);
-        transform: translateX(-110%);
-        box-shadow: 4px 0 12px rgba(0,0,0,0.15);
-        border-radius: 0 0 var(--radius) 0;
-      }
-      aside#app-sidebar.open {
-        transform: translateX(0);
-      }
-      #sidebar-toggle {
-        display: inline-flex;
-      }
+    
+    .option:hover::after {
+        width: 100%;
     }
-    @media (min-width: 768px) {
-      #sidebar-toggle {
-        display: none;
-      }
+    
+    .option:hover {
+        transform: translateY(-3px);
     }
-
-    /* Sidebar nav items */
-    nav#sidebar-nav {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    
+    .correct-answer {
+        animation: pulse 1s;
     }
-    nav#sidebar-nav a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: var(--radius);
-      color: var(--fg);
-      transition: background-color 0.2s ease;
-      user-select: none;
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
     }
-    nav#sidebar-nav a:hover,
-    nav#sidebar-nav a:focus-visible {
-      background-color: var(--input-bg);
-      outline: none;
+    
+    .wrong-answer {
+        animation: shake 0.5s;
     }
-    nav#sidebar-nav a.active {
-      background-color: var(--accent);
-      color: white;
-      font-weight: 700;
-      box-shadow: 0 2px 12px var(--accent);
+    
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
     }
-    nav#sidebar-nav a .material-icons {
-      color: inherit;
+    
+    .progress-bar {
+        transition: width 0.5s ease;
+        height: 4px;
     }
-    /* Notification badges */
-    .badge {
-      background-color: var(--danger);
-      color: white;
-      font-size: 0.7rem;
-      font-weight: 700;
-      min-width: 18px;
-      height: 18px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 6px;
-      user-select: none;
+    
+    .celebration {
+        position: absolute;
+        pointer-events: none;
+        opacity: 0;
     }
-
-    /* Main */
-    main#app-main {
-      grid-area: main;
-      padding: var(--gap);
-      overflow-y: auto;
-      min-height: calc(100vh - var(--header-height) - var(--footer-height));
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap);
-      background: var(--bg);
-      color: var(--fg);
-      user-select: none;
+    
+    .glitch {
+        position: relative;
     }
-    main#app-main:focus-within {
-      outline: 3px solid var(--accent);
-      outline-offset: 3px;
+    
+    .glitch::before, .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
-
-    /* Footer */
-    footer#app-footer {
-      grid-area: footer;
-      padding: 12px var(--gap);
-      background: var(--footer-bg);
-      backdrop-filter: saturate(180%) blur(16px);
-      box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.875rem;
-      color: var(--fg);
-      user-select: none;
+    
+    .glitch::before {
+        left: 2px;
+        text-shadow: -1px 0 #ff2a6d;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim 5s infinite linear alternate-reverse;
     }
-    footer#app-footer a {
-      color: var(--accent);
-      text-decoration: none;
+    
+    .glitch::after {
+        left: -2px;
+        text-shadow: -1px 0 #05d9e8;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim2 5s infinite linear alternate-reverse;
     }
-    footer#app-footer a:hover,
-    footer#app-footer a:focus-visible {
-      text-decoration: underline;
-      outline: none;
+    
+    @keyframes glitch-anim {
+        0% { clip: rect(31px, 9999px, 94px, 0); }
+        5% { clip: rect(70px, 9999px, 71px, 0); }
+        10% { clip: rect(29px, 9999px, 83px, 0); }
+        15% { clip: rect(38px, 9999px, 40px, 0); }
+        20% { clip: rect(16px, 9999px, 86px, 0); }
+        25% { clip: rect(75px, 9999px, 25px, 0); }
+        30% { clip: rect(28px, 9999px, 59px, 0); }
+        35% { clip: rect(46px, 9999px, 18px, 0); }
+        40% { clip: rect(82px, 9999px, 68px, 0); }
+        45% { clip: rect(31px, 9999px, 35px, 0); }
+        50% { clip: rect(94px, 9999px, 73px, 0); }
+        55% { clip: rect(2px, 9999px, 92px, 0); }
+        60% { clip: rect(70px, 9999px, 27px, 0); }
+        65% { clip: rect(95px, 9999px, 2px, 0); }
+        70% { clip: rect(99px, 9999px, 97px, 0); }
+        75% { clip: rect(37px, 9999px, 47px, 0); }
+        80% { clip: rect(26px, 9999px, 69px, 0); }
+        85% { clip: rect(2px, 9999px, 35px, 0); }
+        90% { clip: rect(38px, 9999px, 53px, 0); }
+        95% { clip: rect(87px, 9999px, 62px, 0); }
+        100% { clip: rect(81px, 9999px, 37px, 0); }
     }
-    #status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    
+    @keyframes glitch-anim2 {
+        0% { clip: rect(14px, 9999px, 27px, 0); }
+        5% { clip: rect(67px, 9999px, 31px, 0); }
+        10% { clip: rect(84px, 9999px, 8px, 0); }
+        15% { clip: rect(33px, 9999px, 93px, 0); }
+        20% { clip: rect(46px, 9999px, 36px, 0); }
+        25% { clip: rect(9px, 9999px, 37px, 0); }
+        30% { clip: rect(71px, 9999px, 30px, 0); }
+        35% { clip: rect(88px, 9999px, 89px, 0); }
+        40% { clip: rect(33px, 9999px, 61px, 0); }
+        45% { clip: rect(72px, 9999px, 26px, 0); }
+        50% { clip: rect(25px, 9999px, 55px, 0); }
+        55% { clip: rect(33px, 9999px, 8px, 0); }
+        60% { clip: rect(26px, 9999px, 73px, 0); }
+        65% { clip: rect(90px, 9999px, 86px, 0); }
+        70% { clip: rect(96px, 9999px, 31px, 0); }
+        75% { clip: rect(12px, 9999px, 23px, 0); }
+        80% { clip: rect(95px, 9999px, 73px, 0); }
+        85% { clip: rect(7px, 9999px, 12px, 0); }
+        90% { clip: rect(57px, 9999px, 22px, 0); }
+        95% { clip: rect(69px, 9999px, 47px, 0); }
+        100% { clip: rect(92px, 9999px, 9px, 0); }
     }
-    .status-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: var(--success);
-      box-shadow: 0 0 5px var(--success);
+    
+    .scanline {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, transparent, rgba(5, 217, 232, 0.1), transparent);
+        opacity: 0.5;
+        pointer-events: none;
+        animation: scanline 6s linear infinite;
     }
-    #social-links a {
-      color: var(--accent);
-      margin-left: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      text-decoration: none;
-      padding: 6px;
-      border-radius: 6px;
-      transition: background-color 0.3s ease;
+    
+    @keyframes scanline {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
     }
-    #social-links a:hover,
-    #social-links a:focus-visible {
-      background-color: var(--input-bg);
-      outline: none;
-    }
-
-    /* Math Game UI */
-    #game-container {
-      margin: 0 auto;
-      max-width: 600px;
-      background: var(--bg-glass);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow);
-      color: var(--fg);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      user-select: auto;
-    }
-    #game-container h2 {
-      font-weight: 800;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      text-align: center;
-      color: var(--accent);
-      user-select: text;
-    }
-    #question {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 900;
-      text-align: center;
-      color: var(--fg);
-      text-shadow: 0 0 3px var(--accent);
-      user-select: text;
-    }
-    #answer-input {
-      font-size: 1.25rem;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      border: 2px solid var(--input-border);
-      background-color: var(--input-bg);
-      color: var(--input-fg);
-      text-align: center;
-      transition: border-color 0.3s ease;
-      outline-offset: 2px;
-      width: 100%;
-      max-width: 300px;
-      align-self: center;
-      user-select: text;
-    }
-    #answer-input:focus {
-      border-color: var(--accent);
-      outline: none;
-    }
-    #submit-btn {
-      max-width: 300px;
-      align-self: center;
-    }
-
-    /* Result feedback */
-    #result {
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.25rem;
-      min-height: 2em;
-      user-select: none;
-      transition: color 0.3s ease, opacity 0.3s ease;
-      opacity: 0;
-    }
-    #result.correct {
-      color: var(--success);
-      opacity: 1;
-    }
-    #result.incorrect {
-      color: var(--danger);
-      opacity: 1;
-    }
-
-    /* Stats */
-    #stats {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      font-weight: 600;
-      color: var(--fg);
-      user-select: none;
-    }
-    #stats div {
-      background: var(--input-bg);
-      padding: 12px 24px;
-      border-radius: var(--radius);
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
-      min-width: 100px;
-      text-align: center;
-      font-size: 1rem;
-    }
-
-    /* Notification Toast */
-    #toast {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      max-width: 320px;
-      background-color: var(--notify-bg);
-      color: var(--notify-fg);
-      padding: 1rem 1.5rem;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(40px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      user-select: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      z-index: 1100;
-      box-sizing: border-box;
-    }
-    #toast.show {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-    #toast .material-icons {
-      font-size: 24px;
-      user-select: none;
-    }
-
-    /* Help tooltip style */
-    [data-tooltip] {
-      position: relative;
-      cursor: help;
-    }
-    [data-tooltip]::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 125%; /* top above the element */
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: var(--accent);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      user-select: none;
-      z-index: 1000;
-    }
-    [data-tooltip]:hover::after,
-    [data-tooltip]:focus::after {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* Buttons group */
-    #game-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      user-select: none;
-    }
-
-    /* Accessibility skip link */
-    a.skip-link {
-      position: absolute;
-      top: -40px;
-      left: 0;
-      background: var(--accent);
-      color: white;
-      padding: 8px 16px;
-      z-index: 200;
-      text-decoration: none;
-      border-bottom-right-radius: var(--radius);
-      border-bottom-left-radius: var(--radius);
-      font-weight: 700;
-      transition: top 0.3s;
-    }
-    a.skip-link:focus {
-      top: 0;
-    }
-  </style>
-</head>
-<body>
-  <a href="#game-container" class="skip-link">Skip to game</a>
-  <div id="app" role="application" aria-label="Mathematics game application">
-    <header id="app-header" role="banner">
-      <div class="brand" aria-label="Brand identity">
-        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/582c1c6a-3c4b-48b7-bc5e-fb56f6f4f210.png" alt="Logo with letters M G for Math Game" draggable="false" loading="lazy" />
-        <h1>Math Game</h1>
-      </div>
-      <div id="header-controls">
-        <button id="sidebar-toggle" aria-label="Toggle sidebar navigation" aria-expanded="false" aria-controls="app-sidebar" class="btn"><span class="material-icons">menu</span></button>
-        <button id="theme-toggle" aria-label="Switch dark/light theme" class="btn" data-tooltip="Toggle dark or light mode">
-          <span class="material-icons" id="theme-icon" aria-hidden="true">dark_mode</span>
-          <span class="sr-only">Toggle theme</span>
-        </button>
-      </div>
-    </header>
-
-    <aside id="app-sidebar" role="navigation" aria-label="Main navigation">
-      <nav id="sidebar-nav">
-        <a href="#" class="active" tabindex="0">
-          <span class="material-icons" aria-hidden="true">calculate</span>
-          Play
-        </a>
-        <a href="#" tabindex="-1">
-          <span class="material-icons" aria-hidden="true">leaderboard</span>
-          Leaderboard
-          <span class="badge" aria-label="New leaderboard notification">3</span>
-        </a>
-        <a href="#" tabindex="-1">
-          <span class="material-icons" aria-hidden="true">info</span>
-          About
-        </a>
-        <a href="#" tabindex="-1">
-          <span class="material-icons" aria-hidden="true">settings</span>
-          Settings
-        </a>
-      </nav>
-      <div style="padding: var(--gap); user-select:none; font-size:0.85rem; color: var(--fg); opacity: 0.5;">
-        &copy; 2024 Math Game
-      </div>
-    </aside>
-
-    <main id="app-main" tabindex="0" role="main">
-      <section id="game-container" aria-live="polite" aria-atomic="true">
-        <h2>Mathematics Challenge</h2>
-        <p id="question" aria-label="Math question" tabindex="0" role="textbox"></p>
-        <input 
-          type="number" 
-          id="answer-input" 
-          aria-describedby="input-desc" 
-          aria-required="true" 
-          aria-invalid="false"
-          placeholder="Enter your answer" 
-          autocomplete="off"
-          inputmode="numeric"
-          aria-label="Answer input"
-          aria-live="off"
-        />
-        <div id="input-desc" class="sr-only">Enter the answer to the above math question and press Submit or Enter key</div>
-        <div id="game-buttons">
-          <button id="submit-btn" class="btn" aria-live="assertive" aria-describedby="result">Submit</button>
-          <button id="next-btn" class="btn" aria-disabled="true" disabled>Next</button>
-          <button id="reset-btn" class="btn" aria-label="Reset game">Reset</button>
+</style>
+    <!-- Game Container -->
+    <div class="cyber-panel rounded-lg overflow-hidden">
+        <!-- Game Stats -->
+        <div class="bg-cyber-dark p-4 flex justify-between items-center border-b border-neon-blue">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2 text-neon-blue" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="cyber-font text-neon-blue">LEVEL <span id="level" class="text-white">1</span></span>
+            </div>
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2 text-neon-pink" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="cyber-font text-neon-pink">SKOR <span id="score" class="text-white">0</span></span>
+            </div>
+            <div>
+                <span id="lives" class="text-neon-green text-xl">❤️❤️❤️</span>
+            </div>
         </div>
-        <div id="result" role="alert" aria-live="assertive"></div>
+        
+        <!-- Progress Bar -->
+        <div class="bg-cyber-dark">
+            <div id="progress-bar" class="progress-bar bg-gradient-to-r from-neon-blue to-neon-pink" style="width: 0%"></div>
+        </div>
+        
+        <!-- Game Screens -->
+        <div id="game-container" class="p-6">
+            <!-- Start Screen -->
+            <div id="start-screen" class="text-center py-8">
+                <div class="flex justify-center mb-6">
+                    <svg class="w-24 h-24 text-neon-blue" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v5.7c0 4.67-3.13 8.42-7 9.88-3.87-1.45-7-5.2-7-9.88V6.3l7-3.12zm-1 8.82h2v2h-2v-2zm0-6h2v4h-2V6z"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-4 text-neon-blue cyber-font">SELAMAT DATANG DI CYBER GEOMETRI</h2>
+                <p class="text-gray-300 mb-8 max-w-md mx-auto">Uji pengetahuan geometri Anda dalam simulasi digital dengan menjawab pertanyaan tentang bentuk, sudut, dan rumus-rumus geometri.</p>
+                <div class="flex flex-wrap gap-4 justify-center mb-8">
+                    <div class="bg-cyber-gray p-4 rounded-lg text-neon-blue flex flex-col items-center cyber-border">
+                        <svg class="w-8 h-8 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L4 12l8 10 8-10L12 2z"/>
+                        </svg>
+                        <span>Bentuk</span>
+                    </div>
+                    <div class="bg-cyber-gray p-4 rounded-lg text-neon-purple flex flex-col items-center cyber-border">
+                        <svg class="w-8 h-8 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L2 22h20L12 2z"/>
+                        </svg>
+                        <span>Sudut</span>
+                    </div>
+                    <div class="bg-cyber-gray p-4 rounded-lg text-neon-green flex flex-col items-center cyber-border">
+                        <svg class="w-8 h-8 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 4h16v16H4z"/>
+                        </svg>
+                        <span>Luas</span>
+                    </div>
+                    <div class="bg-cyber-gray p-4 rounded-lg text-neon-pink flex flex-col items-center cyber-border">
+                        <svg class="w-8 h-8 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                        </svg>
+                        <span>Keliling</span>
+                    </div>
+                </div>
+                <button id="start-button" class="cyber-button bg-cyber-gray border border-neon-blue text-neon-blue hover:text-white hover:bg-neon-blue font-bold py-3 px-8 rounded transition">
+                    MULAI SIMULASI
+                </button>
+            </div>
+            
+            <!-- Question Screen -->
+            <div id="question-screen" class="py-6 hidden">
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-2 text-neon-blue cyber-font" id="question-text">Pertanyaan akan muncul di sini</h3>
+                    <div id="question-image" class="flex justify-center my-4"></div>
+                </div>
+                
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <!-- Options will be inserted here -->
+                </div>
+                
+                <div id="feedback" class="p-4 rounded-lg mb-6 hidden"></div>
+                
+                <div class="flex justify-between">
+                    <button id="hint-button" class="cyber-button bg-cyber-gray border border-neon-yellow text-neon-yellow hover:bg-neon-yellow hover:text-cyber-black font-medium py-2 px-4 rounded transition">
+                        PETUNJUK
+                    </button>
+                    <button id="next-button" class="cyber-button bg-cyber-gray border border-neon-blue text-neon-blue hover:bg-neon-blue hover:text-white font-medium py-2 px-6 rounded transition hidden">
+                        LANJUT
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Game Over Screen -->
+            <div id="game-over-screen" class="text-center py-8 hidden">
+                <div class="flex justify-center mb-6">
+                    <svg class="w-24 h-24 text-neon-pink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-4 text-neon-pink cyber-font">SIMULASI BERAKHIR</h2>
+                <p class="text-gray-300 mb-4">Anda telah kehabisan nyawa.</p>
+                <p class="text-xl font-bold text-neon-blue mb-8">SKOR AKHIR: <span id="final-score" class="text-neon-pink">0</span></p>
+                <button id="restart-button" class="cyber-button bg-cyber-gray border border-neon-blue text-neon-blue hover:text-white hover:bg-neon-blue font-bold py-3 px-8 rounded transition">
+                    MULAI ULANG
+                </button>
+            </div>
+            
+            <!-- Victory Screen -->
+            <div id="victory-screen" class="text-center py-8 hidden">
+                <div class="flex justify-center mb-6">
+                    <svg class="w-24 h-24 text-neon-green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-4 text-neon-green cyber-font">SIMULASI SELESAI</h2>
+                <p class="text-gray-300 mb-4">Anda telah menyelesaikan semua level!</p>
+                <p class="text-xl font-bold text-neon-blue mb-8">SKOR AKHIR: <span id="victory-score" class="text-neon-green">0</span></p>
+                <button id="play-again-button" class="cyber-button bg-cyber-gray border border-neon-green text-neon-green hover:text-cyber-black hover:bg-neon-green font-bold py-3 px-8 rounded transition">
+                    MULAI ULANG
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Instructions -->
+    <div class="mt-8 cyber-panel rounded-lg p-6">
+        <h3 class="text-xl font-semibold mb-3 text-neon-blue cyber-font">INSTRUKSI SIMULASI:</h3>
+        <ul class="space-y-2">
+            <li class="flex items-start">
+                <span class="text-neon-pink mr-2">▶</span>
+                <span>Jawab pertanyaan geometri dengan memilih opsi yang benar</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-neon-pink mr-2">▶</span>
+                <span>Setiap jawaban benar menambah skor Anda</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-neon-pink mr-2">▶</span>
+                <span>Jawaban salah akan mengurangi nyawa Anda</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-neon-pink mr-2">▶</span>
+                <span>Gunakan petunjuk jika Anda kesulitan</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-neon-pink mr-2">▶</span>
+                <span>Selesaikan semua level untuk menang!</span>
+            </li>
+        </ul>
+    </div>
+</div>
 
-        <section id="stats" aria-label="Game statistics">
-          <div id="correct-count" tabindex="0">Correct: 0</div>
-          <div id="incorrect-count" tabindex="0">Incorrect: 0</div>
-          <div id="score" tabindex="0">Score: 0</div>
-        </section>
-      </section>
-    </main>
-
-    <footer id="app-footer" role="contentinfo">
-      <div id="status-indicator" aria-live="polite" aria-atomic="true">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span>Ready to play</span>
-      </div>
-      <div id="social-links" aria-label="Follow us on social media">
-        <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-          <span class="material-icons" aria-hidden="true">code</span>
-        </a>
-        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-          <span class="material-icons" aria-hidden="true">chat</span>
-        </a>
-        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <span class="material-icons" aria-hidden="true">business_center</span>
-        </a>
-      </div>
-    </footer>
-  </div>
-
-  <!-- Toast notification -->
-  <div id="toast" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions removals"></div>
-
-  <script>
-    (() => {
-      // Constants
-      const questionEl = document.getElementById('question');
-      const answerInput = document.getElementById('answer-input');
-      const submitBtn = document.getElementById('submit-btn');
-      const nextBtn = document.getElementById('next-btn');
-      const resetBtn = document.getElementById('reset-btn');
-      const resultEl = document.getElementById('result');
-      const correctCountEl = document.getElementById('correct-count');
-      const incorrectCountEl = document.getElementById('incorrect-count');
-      const scoreEl = document.getElementById('score');
-      const toastEl = document.getElementById('toast');
-      const statusIndicator = document.getElementById('status-indicator');
-      const themeToggleBtn = document.getElementById('theme-toggle');
-      const themeIcon = document.getElementById('theme-icon');
-      const sidebar = document.getElementById('app-sidebar');
-      const sidebarToggle = document.getElementById('sidebar-toggle');
-      const sidebarNavLinks = document.querySelectorAll('#sidebar-nav a');
-      const appMain = document.getElementById('app-main');
-
-      // Game data
-      let currentQuestion = null;
-      let correctAnswer = null;
-      let correctCount = 0;
-      let incorrectCount = 0;
-      let score = 0;
-      let answered = false;
-      let userPreferences = {
-        theme: 'light',
-        sound: true,
-      };
-
-      // QUESTION GENERATOR
-      function generateQuestion() {
-        // Random math operator and operands
-        const operations = [
-          { symbol: '+', func: (a,b) => a + b },
-          { symbol: '-', func: (a,b) => a - b },
-          { symbol: '×', func: (a,b) => a * b },
-          { symbol: '÷', func: (a,b) => a / b }
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Game elements
+        const startScreen = document.getElementById('start-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const victoryScreen = document.getElementById('victory-screen');
+        
+        const questionText = document.getElementById('question-text');
+        const questionImage = document.getElementById('question-image');
+        const optionsContainer = document.getElementById('options-container');
+        const feedback = document.getElementById('feedback');
+        
+        const levelElement = document.getElementById('level');
+        const scoreElement = document.getElementById('score');
+        const livesElement = document.getElementById('lives');
+        const progressBar = document.getElementById('progress-bar');
+        const finalScoreElement = document.getElementById('final-score');
+        const victoryScoreElement = document.getElementById('victory-score');
+        
+        // Buttons
+        const startButton = document.getElementById('start-button');
+        const hintButton = document.getElementById('hint-button');
+        const nextButton = document.getElementById('next-button');
+        const restartButton = document.getElementById('restart-button');
+        const playAgainButton = document.getElementById('play-again-button');
+        
+        // Game state
+        let currentLevel = 1;
+        let currentQuestion = 0;
+        let score = 0;
+        let lives = 3;
+        let questions = [];
+        let usedHint = false;
+        
+        // Cyberpunk colors for shapes
+        const cyberColors = {
+            fill: ['#ff2a6d', '#05d9e8', '#d300c5', '#00ff9f', '#fee800'],
+            stroke: ['#ff2a6d', '#05d9e8', '#d300c5', '#00ff9f', '#fee800']
+        };
+        
+        // Questions database
+        const allQuestions = [
+            // Level 1 - Basic Shapes
+            [
+                {
+                    question: "Berapa jumlah sisi pada segitiga?",
+                    image: createShapeSVG("triangle"),
+                    options: ["2", "3", "4", "5"],
+                    answer: "3",
+                    hint: "Hitung jumlah garis yang membentuk bentuk ini."
+                },
+                {
+                    question: "Bentuk geometri apakah ini?",
+                    image: createShapeSVG("square"),
+                    options: ["Segitiga", "Persegi", "Lingkaran", "Trapesium"],
+                    answer: "Persegi",
+                    hint: "Bentuk ini memiliki 4 sisi yang sama panjang."
+                },
+                {
+                    question: "Berapa jumlah sudut pada persegi panjang?",
+                    image: createShapeSVG("rectangle"),
+                    options: ["3", "4", "5", "6"],
+                    answer: "4",
+                    hint: "Hitung jumlah titik pertemuan antar sisi."
+                },
+                {
+                    question: "Bentuk geometri apakah ini?",
+                    image: createShapeSVG("circle"),
+                    options: ["Persegi", "Segitiga", "Lingkaran", "Segilima"],
+                    answer: "Lingkaran",
+                    hint: "Bentuk ini tidak memiliki sudut."
+                },
+                {
+                    question: "Berapa jumlah sisi pada segilima?",
+                    image: createShapeSVG("pentagon"),
+                    options: ["4", "5", "6", "7"],
+                    answer: "5",
+                    hint: "Nama bentuk ini memberikan petunjuk tentang jumlah sisinya."
+                }
+            ],
+            
+            // Level 2 - Angles
+            [
+                {
+                    question: "Sudut apakah ini?",
+                    image: createAngleSVG(90),
+                    options: ["Sudut lancip", "Sudut siku-siku", "Sudut tumpul", "Sudut lurus"],
+                    answer: "Sudut siku-siku",
+                    hint: "Sudut ini besarnya 90 derajat."
+                },
+                {
+                    question: "Sudut apakah ini?",
+                    image: createAngleSVG(45),
+                    options: ["Sudut lancip", "Sudut siku-siku", "Sudut tumpul", "Sudut lurus"],
+                    answer: "Sudut lancip",
+                    hint: "Sudut ini kurang dari 90 derajat."
+                },
+                {
+                    question: "Sudut apakah ini?",
+                    image: createAngleSVG(135),
+                    options: ["Sudut lancip", "Sudut siku-siku", "Sudut tumpul", "Sudut lurus"],
+                    answer: "Sudut tumpul",
+                    hint: "Sudut ini lebih dari 90 derajat tetapi kurang dari 180 derajat."
+                },
+                {
+                    question: "Sudut apakah ini?",
+                    image: createAngleSVG(180),
+                    options: ["Sudut lancip", "Sudut siku-siku", "Sudut tumpul", "Sudut lurus"],
+                    answer: "Sudut lurus",
+                    hint: "Sudut ini besarnya 180 derajat."
+                },
+                {
+                    question: "Berapa jumlah sudut dalam segitiga?",
+                    image: createShapeSVG("triangle"),
+                    options: ["90°", "180°", "270°", "360°"],
+                    answer: "180°",
+                    hint: "Jumlah sudut dalam segitiga selalu tetap."
+                }
+            ],
+            
+            // Level 3 - Area and Perimeter
+            [
+                {
+                    question: "Rumus luas persegi adalah...",
+                    image: createShapeSVG("square", "s"),
+                    options: ["s × s", "2 × (s + s)", "s × 4", "s²"],
+                    answer: "s × s",
+                    hint: "Luas adalah hasil kali panjang dan lebar. Pada persegi, panjang = lebar = s."
+                },
+                {
+                    question: "Rumus keliling persegi adalah...",
+                    image: createShapeSVG("square", "s"),
+                    options: ["s × s", "4 × s", "2 × s", "s + s"],
+                    answer: "4 × s",
+                    hint: "Keliling adalah jumlah semua sisi. Persegi memiliki 4 sisi yang sama panjang."
+                },
+                {
+                    question: "Rumus luas persegi panjang adalah...",
+                    image: createShapeSVG("rectangle", "p,l"),
+                    options: ["p × l", "2 × (p + l)", "p + l", "p × p"],
+                    answer: "p × l",
+                    hint: "Luas adalah hasil kali panjang (p) dan lebar (l)."
+                },
+                {
+                    question: "Rumus keliling persegi panjang adalah...",
+                    image: createShapeSVG("rectangle", "p,l"),
+                    options: ["p × l", "2 × (p + l)", "p + l", "4 × p"],
+                    answer: "2 × (p + l)",
+                    hint: "Keliling adalah jumlah semua sisi. Persegi panjang memiliki 2 sisi panjang dan 2 sisi lebar."
+                },
+                {
+                    question: "Rumus luas segitiga adalah...",
+                    image: createShapeSVG("triangle", "a,t"),
+                    options: ["a × t", "½ × a × t", "a + t", "a × a"],
+                    answer: "½ × a × t",
+                    hint: "a adalah alas dan t adalah tinggi segitiga."
+                }
+            ],
+            
+            // Level 4 - Advanced Shapes
+            [
+                {
+                    question: "Berapa jumlah sisi pada trapesium?",
+                    image: createShapeSVG("trapezoid"),
+                    options: ["3", "4", "5", "6"],
+                    answer: "4",
+                    hint: "Trapesium adalah segiempat dengan sepasang sisi sejajar."
+                },
+                {
+                    question: "Rumus luas lingkaran adalah...",
+                    image: createShapeSVG("circle", "r"),
+                    options: ["2 × π × r", "π × r²", "π × d", "2 × r"],
+                    answer: "π × r²",
+                    hint: "r adalah jari-jari lingkaran dan π (pi) adalah konstanta dengan nilai sekitar 3,14."
+                },
+                {
+                    question: "Rumus keliling lingkaran adalah...",
+                    image: createShapeSVG("circle", "r"),
+                    options: ["2 × π × r", "π × r²", "π × d", "r + r"],
+                    answer: "2 × π × r",
+                    hint: "r adalah jari-jari lingkaran dan π (pi) adalah konstanta dengan nilai sekitar 3,14."
+                },
+                {
+                    question: "Berapa jumlah diagonal pada segiempat?",
+                    image: createShapeSVG("square"),
+                    options: ["1", "2", "3", "4"],
+                    answer: "2",
+                    hint: "Diagonal adalah garis yang menghubungkan dua sudut yang tidak berdekatan."
+                },
+                {
+                    question: "Rumus luas jajargenjang adalah...",
+                    image: createShapeSVG("parallelogram", "a,t"),
+                    options: ["a × t", "½ × a × t", "a + t", "2 × (a + t)"],
+                    answer: "a × t",
+                    hint: "a adalah alas dan t adalah tinggi jajargenjang."
+                }
+            ],
+            
+            // Level 5 - Problem Solving
+            [
+                {
+                    question: "Sebuah persegi memiliki sisi 5 cm. Berapakah luasnya?",
+                    image: createShapeSVG("square", "5 cm"),
+                    options: ["10 cm²", "15 cm²", "20 cm²", "25 cm²"],
+                    answer: "25 cm²",
+                    hint: "Gunakan rumus luas persegi: s × s"
+                },
+                {
+                    question: "Sebuah persegi panjang memiliki panjang 8 cm dan lebar 5 cm. Berapakah kelilingnya?",
+                    image: createShapeSVG("rectangle", "8 cm,5 cm"),
+                    options: ["13 cm", "26 cm", "40 cm", "64 cm"],
+                    answer: "26 cm",
+                    hint: "Gunakan rumus keliling persegi panjang: 2 × (p + l)"
+                },
+                {
+                    question: "Sebuah segitiga memiliki alas 6 cm dan tinggi 8 cm. Berapakah luasnya?",
+                    image: createShapeSVG("triangle", "6 cm,8 cm"),
+                    options: ["24 cm²", "48 cm²", "14 cm²", "30 cm²"],
+                    answer: "24 cm²",
+                    hint: "Gunakan rumus luas segitiga: ½ × a × t"
+                },
+                {
+                    question: "Sebuah lingkaran memiliki jari-jari 7 cm. Berapakah kelilingnya? (π = 3,14)",
+                    image: createShapeSVG("circle", "7 cm"),
+                    options: ["21,98 cm", "43,96 cm", "153,86 cm", "14 cm"],
+                    answer: "43,96 cm",
+                    hint: "Gunakan rumus keliling lingkaran: 2 × π × r"
+                },
+                {
+                    question: "Sebuah jajargenjang memiliki alas 9 cm dan tinggi 4 cm. Berapakah luasnya?",
+                    image: createShapeSVG("parallelogram", "9 cm,4 cm"),
+                    options: ["18 cm²", "26 cm²", "36 cm²", "13 cm²"],
+                    answer: "36 cm²",
+                    hint: "Gunakan rumus luas jajargenjang: a × t"
+                }
+            ]
         ];
-        // Random difficulty levels affecting range
-        const difficulty = 1 + Math.floor(score / 5);
-        const max = 10 + difficulty * 10;
-
-        const op = operations[Math.floor(Math.random() * operations.length)];
-        let a = Math.floor(Math.random() * max) + 1;
-        let b = Math.floor(Math.random() * max) + 1;
-
-        // For division, make sure a divisible by b to get whole number results
-        if (op.symbol === '÷') {
-          a = a * b;
-        }
-
-        currentQuestion = `${a} ${op.symbol} ${b}`;
-        correctAnswer = op.func(a, b);
-
-        if (op.symbol === '÷') {
-          // Round for display but integer expected
-          correctAnswer = Math.round(correctAnswer);
-        }
-
-        updateQuestionUI();
-      }
-
-      function updateQuestionUI() {
-        questionEl.textContent = currentQuestion;
-        answerInput.value = '';
-        answerInput.setAttribute('aria-invalid', 'false');
-        answerInput.focus();
-        resultEl.textContent = '';
-        resultEl.className = '';
-        answered = false;
-        submitBtn.disabled = false;
-        nextBtn.disabled = true;
-        nextBtn.setAttribute('aria-disabled', 'true');
-      }
-
-      // Input validation & checking answer
-      function submitAnswer() {
-        if (answered) return;
-        let val = answerInput.value.trim();
-
-        if (val === '') {
-          // empty input error
-          answerInput.setAttribute('aria-invalid', 'true');
-          showToast('Please enter an answer.', 'error');
-          return;
-        }
-
-        let numVal = Number(val);
-        if (isNaN(numVal)) {
-          answerInput.setAttribute('aria-invalid', 'true');
-          showToast('Answer must be a number.', 'error');
-          return;
-        }
-
-        answerInput.setAttribute('aria-invalid', 'false');
-        answered = true;
-        submitBtn.disabled = true;
-        nextBtn.disabled = false;
-        nextBtn.setAttribute('aria-disabled', 'false');
-
-        if (Math.abs(numVal - correctAnswer) < 0.001) {
-          // Correct
-          correctCount++;
-          score += 10;
-          resultEl.textContent = 'Correct! Great job.';
-          resultEl.className = 'correct';
-          updateStatus('Correct answer');
-          if(userPreferences.sound) playSound('success');
-          showToast('Correct answer! +10 points', 'success');
-        } else {
-          // Wrong
-          incorrectCount++;
-          score -= 5;
-          if(score < 0) score = 0;
-          resultEl.textContent = `Incorrect. The correct answer was ${correctAnswer}.`;
-          resultEl.className = 'incorrect';
-          updateStatus('Wrong answer');
-          if(userPreferences.sound) playSound('error');
-          showToast(`Incorrect answer. Correct was ${correctAnswer}.`, 'error');
-        }
-        updateStats();
-      }
-      function updateStats() {
-        correctCountEl.textContent = `Correct: ${correctCount}`;
-        incorrectCountEl.textContent = `Incorrect: ${incorrectCount}`;
-        scoreEl.textContent = `Score: ${score}`;
-      }
-
-      function nextQuestion() {
-        generateQuestion();
-        answerInput.focus();
-      }
-
-      // Reset game
-      function resetGame() {
-        correctCount = 0;
-        incorrectCount = 0;
-        score = 0;
-        updateStats();
-        generateQuestion();
-        updateStatus('Game reset');
-        showToast('Game has been reset.', 'info');
-      }
-
-      // Toast notifications
-      let toastTimeout;
-      function showToast(message, type = 'info') {
-        toastEl.textContent = '';
-        toastEl.className = '';
-        toastEl.classList.add('show');
-        toastEl.textContent = message;
-
-        switch(type) {
-          case 'success':
-            toastEl.style.backgroundColor = 'var(--success)';
-            toastEl.style.color = 'white';
-            break;
-          case 'error':
-            toastEl.style.backgroundColor = 'var(--danger)';
-            toastEl.style.color = 'white';
-            break;
-          case 'info':
-          default:
-            toastEl.style.backgroundColor = 'var(--notify-bg)';
-            toastEl.style.color = 'var(--notify-fg)';
-            break;
-        }
-
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => {
-          toastEl.classList.remove('show');
-        }, 3000);
-      }
-
-      // Status update
-      function updateStatus(text) {
-        statusIndicator.querySelector('span:nth-child(2)').textContent = text;
-      }
-
-      // Sound feedback
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      function playSound(type) {
-        if(!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        if(type === 'success') {
-          osc.frequency.value = 880;
-          gain.gain.value = 0.15;
-          osc.type = 'triangle';
-        } else if(type === 'error') {
-          osc.frequency.value = 220;
-          gain.gain.value = 0.15;
-          osc.type = 'sawtooth';
-        }
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
-      }
-
-      // Theme toggle logic
-      function loadTheme() {
-        const savedTheme = localStorage.getItem('mathgame-theme');
-        if(savedTheme) {
-          applyTheme(savedTheme);
-          userPreferences.theme = savedTheme;
-        } else {
-          // Detect system preference
-          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          applyTheme(prefersDark ? 'dark' : 'light');
-          userPreferences.theme = prefersDark ? 'dark' : 'light';
-        }
-      }
-      function applyTheme(theme) {
-        if(theme === 'dark') {
-          document.documentElement.style.setProperty('--bg', '#0d1117');
-          document.documentElement.style.setProperty('--fg', '#c9d1d9');
-          document.documentElement.style.setProperty('--bg-glass', 'rgba(13 17 23 / 0.8)');
-          document.documentElement.style.setProperty('--shadow-glass', 'rgba(0 0 0 / 0.8)');
-          themeIcon.textContent = 'light_mode';
-          document.body.classList.add('dark');
-        } else {
-          document.documentElement.style.setProperty('--bg', '#ffffff');
-          document.documentElement.style.setProperty('--fg', '#24292e');
-          document.documentElement.style.setProperty('--bg-glass', 'rgba(255 255 255 / 0.75)');
-          document.documentElement.style.setProperty('--shadow-glass', 'rgba(0 0 0 / 0.05)');
-          themeIcon.textContent = 'dark_mode';
-          document.body.classList.remove('dark');
-        }
-        localStorage.setItem('mathgame-theme', theme);
-      }
-
-      // Sidebar toggle for mobile
-      function toggleSidebar() {
-        if(sidebar.classList.contains('open')) {
-          sidebar.classList.remove('open');
-          sidebarToggle.setAttribute('aria-expanded', 'false');
-        } else {
-          sidebar.classList.add('open');
-          sidebarToggle.setAttribute('aria-expanded', 'true');
-          // Trap focus inside sidebar when open on mobile
-          sidebar.querySelector('a').focus();
-        }
-      }
-
-      // Keyboard shortcuts:
-      // Enter on answer input or Submit triggers submit
-      // N or Right arrow triggers next question if available
-      // R triggers reset
-      // T toggles theme
-      // M toggles sidebar on mobile
-      document.addEventListener('keydown', e => {
-        if(document.activeElement === answerInput) {
-          if(e.key === 'Enter') {
-            e.preventDefault();
-            submitAnswer();
-          }
-        }
-        if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
-          return; // avoid interfering with normal input
-        }
-        switch(e.key.toLowerCase()) {
-          case 'n':
-          case 'arrowright':
-            if(!nextBtn.disabled) {
-              e.preventDefault();
-              nextQuestion();
+        
+        // Create SVG for shapes with cyberpunk style
+        function createShapeSVG(shape, label = "") {
+            const svg = document.createElement('div');
+            svg.className = "shape bg-cyber-gray p-4 rounded-lg inline-block cyber-border";
+            
+            // Get random color from cyberpunk palette
+            const colorIndex = Math.floor(Math.random() * cyberColors.fill.length);
+            const fillColor = cyberColors.fill[colorIndex];
+            const strokeColor = cyberColors.stroke[colorIndex];
+            
+            let svgContent = "";
+            let labelContent = "";
+            
+            const glowEffect = `filter: drop-shadow(0 0 3px ${fillColor});`;
+            
+            switch(shape) {
+                case "triangle":
+                    svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                        <polygon points="75,20 20,130 130,130" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2" />
+                    </svg>`;
+                    
+                    if (label) {
+                        const labels = label.split(',');
+                        if (labels.length === 1) {
+                            labelContent = `<div class="text-center mt-2 text-${fillColor.replace('#', '')} font-medium">${labels[0]}</div>`;
+                        } else if (labels.length === 2) {
+                            labelContent = `
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-${fillColor.replace('#', '')} font-medium">a = ${labels[0]}</span>
+                                    <span class="text-${fillColor.replace('#', '')} font-medium">t = ${labels[1]}</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    break;
+                    
+                case "square":
+                    svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                        <rect x="25" y="25" width="100" height="100" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2" />
+                    </svg>`;
+                    
+                    if (label) {
+                        labelContent = `<div class="text-center mt-2 text-${fillColor.replace('#', '')} font-medium">s = ${label}</div>`;
+                    }
+                    break;
+                    
+                case "rectangle":
+                    svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                        <rect x="25" y="40" width="100" height="70" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2" />
+                    </svg>`;
+                    
+                    if (label) {
+                        const labels = label.split(',');
+                        if (labels.length === 2) {
+                            labelContent = `
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-${fillColor.replace('#', '')} font-medium">p = ${labels[0]}</span>
+                                    <span class="text-${fillColor.replace('#', '')} font-medium">l = ${labels[1]}</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    break;
+                    
+                case "circle":
+                    svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                        <circle cx="75" cy="75" r="50" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2" />
+                    </svg>`;
+                    
+                    if (label) {
+                        labelContent = `<div class="text-center mt-2 text-${fillColor.replace('#', '')} font-medium">r = ${label}</div>`;
+                    }
+                    break;
+                    
+                case "pentagon":
+                    svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                        <polygon points="75,20 130,60 110,120 40,120 20,60" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2" />
+                    </svg>`;
+                    break;
+                    
+                case "trapezoid":
+                    svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                        <polygon points="30,50 120,50 140,100 10,100" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2" />
+                    </svg>`;
+                    break;
+                    
+                case "parallelogram":
+                    svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                        <polygon points="40,40 120,40 100,110 20,110" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2" />
+                    </svg>`;
+                    
+                    if (label) {
+                        const labels = label.split(',');
+                        if (labels.length === 2) {
+                            labelContent = `
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-${fillColor.replace('#', '')} font-medium">a = ${labels[0]}</span>
+                                    <span class="text-${fillColor.replace('#', '')} font-medium">t = ${labels[1]}</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    break;
             }
-            break;
-          case 'r':
-            e.preventDefault();
-            resetGame();
-            break;
-          case 't':
-            e.preventDefault();
-            themeToggleBtn.click();
-            break;
-          case 'm':
-            if(window.innerWidth < 768) {
-              e.preventDefault();
-              toggleSidebar();
-            }
-            break;
+            
+            svg.innerHTML = svgContent + labelContent;
+            return svg;
         }
-      });
-
-      // Initialize
-      function init() {
-        loadTheme();
-        generateQuestion();
-        updateStats();
-        updateStatus('Ready to play');
+        
+        // Create SVG for angles with cyberpunk style
+        function createAngleSVG(degrees) {
+            const svg = document.createElement('div');
+            svg.className = "shape bg-cyber-gray p-4 rounded-lg inline-block cyber-border";
+            
+            // Get random color from cyberpunk palette
+            const colorIndex = Math.floor(Math.random() * cyberColors.fill.length);
+            const fillColor = cyberColors.fill[colorIndex];
+            const strokeColor = cyberColors.stroke[colorIndex];
+            
+            // Convert degrees to radians for calculation
+            const radians = (degrees * Math.PI) / 180;
+            
+            // Calculate end point of the angle line
+            const radius = 50;
+            const x = 75 + radius * Math.cos(radians);
+            const y = 75 - radius * Math.sin(radians);
+            
+            const glowEffect = `filter: drop-shadow(0 0 3px ${fillColor});`;
+            
+            const svgContent = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" style="${glowEffect}">
+                    <line x1="75" y1="75" x2="125" y2="75" stroke="${strokeColor}" stroke-width="2" />
+                    <line x1="75" y1="75" x2="${x}" y2="${y}" stroke="${strokeColor}" stroke-width="2" />
+                    <path d="M 85 75 A 10 10 0 0 0 ${75 + 10 * Math.cos(radians)} ${75 - 10 * Math.sin(radians)}" fill="none" stroke="${fillColor}" stroke-width="2" />
+                    <text x="95" y="65" font-size="12" fill="${fillColor}" style="font-family: 'Orbitron', sans-serif;">${degrees}°</text>
+                </svg>
+                <div class="text-center mt-2 text-${fillColor.replace('#', '')} font-medium cyber-font">${degrees}°</div>
+            `;
+            
+            svg.innerHTML = svgContent;
+            return svg;
+        }
+        
+        // Initialize game
+        function initGame() {
+            currentLevel = 1;
+            currentQuestion = 0;
+            score = 0;
+            lives = 3;
+            
+            updateUI();
+            loadQuestions();
+            showScreen(startScreen);
+        }
+        
+        // Load questions for current level
+        function loadQuestions() {
+            questions = allQuestions[currentLevel - 1];
+            shuffleArray(questions);
+        }
+        
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // Show a specific screen
+        function showScreen(screen) {
+            startScreen.classList.add('hidden');
+            questionScreen.classList.add('hidden');
+            gameOverScreen.classList.add('hidden');
+            victoryScreen.classList.add('hidden');
+            
+            screen.classList.remove('hidden');
+        }
+        
+        // Update UI elements
+        function updateUI() {
+            levelElement.textContent = currentLevel;
+            scoreElement.textContent = score;
+            livesElement.textContent = '❤️'.repeat(lives);
+            
+            // Update progress bar
+            const progress = (currentQuestion / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // Display current question
+        function displayQuestion() {
+            const question = questions[currentQuestion];
+            
+            questionText.textContent = question.question;
+            
+            // Clear previous image and add new one
+            questionImage.innerHTML = '';
+            questionImage.appendChild(question.image);
+            
+            // Create option buttons
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option bg-cyber-gray border border-neon-blue text-white hover:border-neon-pink py-3 px-4 rounded transition w-full text-left';
+                button.textContent = option;
+                button.dataset.option = option;
+                
+                button.addEventListener('click', () => selectAnswer(option));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Hide feedback and next button
+            feedback.classList.add('hidden');
+            nextButton.classList.add('hidden');
+            
+            // Reset hint usage
+            usedHint = false;
+            
+            updateUI();
+        }
+        
+        // Select an answer
+        function selectAnswer(selectedOption) {
+            const question = questions[currentQuestion];
+            const isCorrect = selectedOption === question.answer;
+            
+            // Disable all option buttons
+            const optionButtons = optionsContainer.querySelectorAll('.option');
+            optionButtons.forEach(button => {
+                button.disabled = true;
+                
+                if (button.dataset.option === question.answer) {
+                    button.classList.remove('border-neon-blue');
+                    button.classList.add('border-neon-green', 'text-neon-green');
+                } else if (button.dataset.option === selectedOption && !isCorrect) {
+                    button.classList.remove('border-neon-blue');
+                    button.classList.add('border-neon-pink', 'text-neon-pink');
+                }
+            });
+            
+            // Show feedback
+            feedback.classList.remove('hidden', 'bg-cyber-gray', 'border-neon-green', 'text-neon-green', 'border-neon-pink', 'text-neon-pink');
+            
+            if (isCorrect) {
+                feedback.classList.add('bg-cyber-gray', 'border', 'border-neon-green', 'text-neon-green');
+                feedback.innerHTML = '<span class="font-bold">BENAR!</span> Jawaban Anda tepat.';
+                
+                // Add points
+                const pointsEarned = usedHint ? 5 : 10;
+                score += pointsEarned;
+                
+                // Create celebration effect
+                createCelebration();
+            } else {
+                feedback.classList.add('bg-cyber-gray', 'border', 'border-neon-pink', 'text-neon-pink');
+                feedback.innerHTML = `<span class="font-bold">SALAH!</span> Jawaban yang benar adalah: ${question.answer}`;
+                
+                // Lose a life
+                lives--;
+                
+                // Shake the wrong answer
+                const wrongButton = Array.from(optionButtons).find(button => button.dataset.option === selectedOption);
+                wrongButton.classList.add('wrong-answer');
+            }
+            
+            // Update UI
+            updateUI();
+            
+            // Show next button
+            nextButton.classList.remove('hidden');
+            
+            // Check if game over
+            if (lives <= 0) {
+                setTimeout(() => {
+                    finalScoreElement.textContent = score;
+                    showScreen(gameOverScreen);
+                }, 1500);
+            }
+        }
+        
+        // Show hint
+        function showHint() {
+            const question = questions[currentQuestion];
+            
+            feedback.classList.remove('hidden');
+            feedback.classList.add('bg-cyber-gray', 'border', 'border-neon-yellow', 'text-neon-yellow');
+            feedback.innerHTML = `<span class="font-bold">PETUNJUK:</span> ${question.hint}`;
+            
+            usedHint = true;
+        }
+        
+        // Go to next question
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion >= questions.length) {
+                // Level completed
+                if (currentLevel < allQuestions.length) {
+                    currentLevel++;
+                    currentQuestion = 0;
+                    loadQuestions();
+                } else {
+                    // Game completed
+                    victoryScoreElement.textContent = score;
+                    showScreen(victoryScreen);
+                    return;
+                }
+            }
+            
+            displayQuestion();
+        }
+        
+        // Create celebration effect
+        function createCelebration() {
+            const correctButton = Array.from(optionsContainer.querySelectorAll('.option')).find(button => button.dataset.option === questions[currentQuestion].answer);
+            correctButton.classList.add('correct-answer');
+            
+            // Create cyber particles
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'celebration';
+                
+                // Random cyber symbol
+                const symbols = ['⚡', '✧', '◈', '⬢', '⬡', '◉', '◎', '⚪', '⚫', '⬤'];
+                const colorClass = cyberColors.fill[Math.floor(Math.random() * cyberColors.fill.length)];
+                
+                particle.innerHTML = `<span style="color: ${colorClass}; text-shadow: 0 0 5px ${colorClass};">${symbols[Math.floor(Math.random() * symbols.length)]}</span>`;
+                particle.style.fontSize = `${Math.random() * 20 + 20}px`;
+                particle.style.position = 'absolute';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                document.body.appendChild(particle);
+                
+                // Animate
+                particle.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(-${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: 1000,
+                    easing: 'ease-out'
+                }).onfinish = () => particle.remove();
+            }
+        }
+        
         // Event listeners
-        submitBtn.addEventListener('click', submitAnswer);
-        nextBtn.addEventListener('click', nextQuestion);
-        resetBtn.addEventListener('click', resetGame);
-        themeToggleBtn.addEventListener('click', () => {
-          userPreferences.theme = userPreferences.theme === 'light' ? 'dark' : 'light';
-          applyTheme(userPreferences.theme);
-          showToast(`Switched to ${userPreferences.theme} theme`, 'info');
+        startButton.addEventListener('click', () => {
+            showScreen(questionScreen);
+            displayQuestion();
         });
-        sidebarToggle.addEventListener('click', toggleSidebar);
-        // Clicking sidebar nav links sets active visually
-        sidebarNavLinks.forEach(link => {
-          link.addEventListener('click', e => {
-            e.preventDefault();
-            sidebarNavLinks.forEach(l => l.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-            if(window.innerWidth < 768) {
-              toggleSidebar();
-              appMain.focus();
-            }
-            showToast(`Navigated to ${e.currentTarget.textContent.trim()}`, 'info');
-          });
-          // Manage tabindex for accessibility
-          link.addEventListener('keydown', e => {
-            if(e.key === 'Tab') {
-              // force loop in sidebar when open on mobile
-              if(sidebar.classList.contains('open')) {
-                if(e.shiftKey && e.currentTarget === sidebarNavLinks[0]) {
-                  e.preventDefault();
-                  sidebarNavLinks[sidebarNavLinks.length - 1].focus();
-                }
-                else if(!e.shiftKey && e.currentTarget === sidebarNavLinks[sidebarNavLinks.length - 1]) {
-                  e.preventDefault();
-                  sidebarNavLinks[0].focus();
-                }
-              }
-            }
-          });
+        
+        hintButton.addEventListener('click', showHint);
+        nextButton.addEventListener('click', nextQuestion);
+        
+        restartButton.addEventListener('click', () => {
+            initGame();
+            showScreen(startScreen);
         });
-      }
-
-      // Run init after DOM ready
-      document.addEventListener('DOMContentLoaded', init);
-    })();
-  </script>
-</body>
-</html>
-
+        
+        playAgainButton.addEventListener('click', () => {
+            initGame();
+            showScreen(startScreen);
+        });
+        
+        // Initialize the game
+        initGame();
+    });
+</script>
