@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1" />
+  <title>Mathematics Game - GitHub Inspired</title>
+  <meta name="description" content="A premium modern mathematics game app with GitHub-inspired UI, responsive design, accessibility, night mode, notifications and keyboard shortcuts." />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+      background-color: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* CSS variables for light and dark */
+    :root {
+      --accent: #0366d6;
+      --success: #28a745;
+      --danger: #d73a49;
+      --warning: #f66a0a;
+      --bg: #ffffff;
+      --fg: #24292e;
+      --bg-glass: rgba(255 255 255 / 0.75);
+      --shadow-glass: rgba(0 0 0 / 0.05);
+      --scrollbar-thumb: rgba(3,102,214,0.4);
+      --scrollbar-thumb-hover: rgba(3,102,214,0.7);
+      --input-border: #d0d7de;
+      --input-bg: #f6f8fa;
+      --input-fg: #24292e;
+      --notify-bg: #0366d6;
+      --notify-fg: #ffffff;
+      --button-bg: #0366d6;
+      --button-fg: #ffffff;
+      --button-hover-bg: #0356b6;
+      --header-bg: rgba(255 255 255 / 0.75);
+      --footer-bg: rgba(246 248 250 / 0.85);
+      --sidebar-bg: rgba(250 250 250 / 0.9);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --accent: #58a6ff;
+        --success: #3fb950;
+        --danger: #f85149;
+        --warning: #ffa657;
+        --bg: #0d1117;
+        --fg: #c9d1d9;
+        --bg-glass: rgba(13 17 23 / 0.8);
+        --shadow-glass: rgba(0 0 0 / 0.8);
+        --scrollbar-thumb: rgba(88,166,255,0.4);
+        --scrollbar-thumb-hover: rgba(88,166,255,0.7);
+        --input-border: #30363d;
+        --input-bg: #161b22;
+        --input-fg: #c9d1d9;
+        --notify-bg: #58a6ff;
+        --notify-fg: #0d1117;
+        --button-bg: #238636;
+        --button-fg: #e6edf3;
+        --button-hover-bg: #2ea043;
+        --header-bg: rgba(13 17 23 / 0.95);
+        --footer-bg: rgba(21 25 31 / 0.85);
+        --sidebar-bg: rgba(12 17 22 / 0.9);
+      }
+    }
+    /* Scrollbar style */
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb);
+      border-radius: 8px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+      transition: background-color 0.3s ease;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scrollbar-thumb-hover);
+    }
+
+    /* Layout variables */
+    :root {
+      --header-height: 64px;
+      --sidebar-width: 280px;
+      --footer-height: 48px;
+      --gap: 16px;
+      --radius: 12px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body, #app {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #app {
+      display: grid;
+      grid-template-areas: 
+        "header header"
+        "sidebar main"
+        "footer footer";
+      grid-template-columns: var(--sidebar-width) 1fr;
+      grid-template-rows: var(--header-height) 1fr var(--footer-height);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    /* Responsive layout adjustments */
+    @media (max-width: 1023px) {
+      #app {
+        grid-template-columns: 60px 1fr;
+      }
+    }
+    @media (max-width: 767px) {
+      #app {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+          "header"
+          "main"
+          "footer";
+      }
+    }
+    
+    /* Header */
+    header#app-header {
+      grid-area: header;
+      position: sticky;
+      top: 0;
+      height: var(--header-height);
+      background: var(--header-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--gap);
+      z-index: 100;
+    }
+
+    /* Brand and nav area */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      box-shadow: var(--shadow);
+      object-fit: cover;
+      user-select: none;
+    }
+    .brand h1 {
+      font-size: clamp(1.25rem, 2vw, 1.75rem);
+      font-weight: 700;
+      color: var(--accent);
+      user-select: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Header right controls */
+    #header-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    button, .btn {
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--button-bg);
+      color: var(--button-fg);
+      border: none;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      transition: background-color var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.875rem;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:focus-visible, .btn:focus-visible {
+      outline-offset: 4px;
+    }
+    button:hover, .btn:hover {
+      background-color: var(--button-hover-bg);
+    }
+    button:disabled, .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Icon styling */
+    .material-icons {
+      font-size: 20px;
+      font-weight: normal;
+      user-select: none;
+    }
+
+    /* Sidebar */
+    aside#app-sidebar {
+      grid-area: sidebar;
+      background: var(--sidebar-bg);
+      box-shadow: inset -1px 0 0 #d0d7de;
+      display: flex;
+      flex-direction: column;
+      padding: var(--gap);
+      gap: var(--gap);
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 767px) {
+      aside#app-sidebar {
+        position: fixed;
+        top: var(--header-height);
+        bottom: var(--footer-height);
+        width: var(--sidebar-width);
+        z-index: 150;
+        background: var(--sidebar-bg);
+        transform: translateX(-110%);
+        box-shadow: 4px 0 12px rgba(0,0,0,0.15);
+        border-radius: 0 0 var(--radius) 0;
+      }
+      aside#app-sidebar.open {
+        transform: translateX(0);
+      }
+      #sidebar-toggle {
+        display: inline-flex;
+      }
+    }
+    @media (min-width: 768px) {
+      #sidebar-toggle {
+        display: none;
+      }
+    }
+
+    /* Sidebar nav items */
+    nav#sidebar-nav {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    nav#sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: var(--radius);
+      color: var(--fg);
+      transition: background-color 0.2s ease;
+      user-select: none;
+    }
+    nav#sidebar-nav a:hover,
+    nav#sidebar-nav a:focus-visible {
+      background-color: var(--input-bg);
+      outline: none;
+    }
+    nav#sidebar-nav a.active {
+      background-color: var(--accent);
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 2px 12px var(--accent);
+    }
+    nav#sidebar-nav a .material-icons {
+      color: inherit;
+    }
+    /* Notification badges */
+    .badge {
+      background-color: var(--danger);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      user-select: none;
+    }
+
+    /* Main */
+    main#app-main {
+      grid-area: main;
+      padding: var(--gap);
+      overflow-y: auto;
+      min-height: calc(100vh - var(--header-height) - var(--footer-height));
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      background: var(--bg);
+      color: var(--fg);
+      user-select: none;
+    }
+    main#app-main:focus-within {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* Footer */
+    footer#app-footer {
+      grid-area: footer;
+      padding: 12px var(--gap);
+      background: var(--footer-bg);
+      backdrop-filter: saturate(180%) blur(16px);
+      box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      color: var(--fg);
+      user-select: none;
+    }
+    footer#app-footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    footer#app-footer a:hover,
+    footer#app-footer a:focus-visible {
+      text-decoration: underline;
+      outline: none;
+    }
+    #status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--success);
+      box-shadow: 0 0 5px var(--success);
+    }
+    #social-links a {
+      color: var(--accent);
+      margin-left: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      text-decoration: none;
+      padding: 6px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    #social-links a:hover,
+    #social-links a:focus-visible {
+      background-color: var(--input-bg);
+      outline: none;
+    }
+
+    /* Math Game UI */
+    #game-container {
+      margin: 0 auto;
+      max-width: 600px;
+      background: var(--bg-glass);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      color: var(--fg);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      user-select: auto;
+    }
+    #game-container h2 {
+      font-weight: 800;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      text-align: center;
+      color: var(--accent);
+      user-select: text;
+    }
+    #question {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      text-align: center;
+      color: var(--fg);
+      text-shadow: 0 0 3px var(--accent);
+      user-select: text;
+    }
+    #answer-input {
+      font-size: 1.25rem;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      border: 2px solid var(--input-border);
+      background-color: var(--input-bg);
+      color: var(--input-fg);
+      text-align: center;
+      transition: border-color 0.3s ease;
+      outline-offset: 2px;
+      width: 100%;
+      max-width: 300px;
+      align-self: center;
+      user-select: text;
+    }
+    #answer-input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    #submit-btn {
+      max-width: 300px;
+      align-self: center;
+    }
+
+    /* Result feedback */
+    #result {
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      min-height: 2em;
+      user-select: none;
+      transition: color 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    #result.correct {
+      color: var(--success);
+      opacity: 1;
+    }
+    #result.incorrect {
+      color: var(--danger);
+      opacity: 1;
+    }
+
+    /* Stats */
+    #stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-weight: 600;
+      color: var(--fg);
+      user-select: none;
+    }
+    #stats div {
+      background: var(--input-bg);
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
+      min-width: 100px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    /* Notification Toast */
+    #toast {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      max-width: 320px;
+      background-color: var(--notify-bg);
+      color: var(--notify-fg);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(40px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      z-index: 1100;
+      box-sizing: border-box;
+    }
+    #toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    #toast .material-icons {
+      font-size: 24px;
+      user-select: none;
+    }
+
+    /* Help tooltip style */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%; /* top above the element */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--accent);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      user-select: none;
+      z-index: 1000;
+    }
+    [data-tooltip]:hover::after,
+    [data-tooltip]:focus::after {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Buttons group */
+    #game-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      user-select: none;
+    }
+
+    /* Accessibility skip link */
+    a.skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--accent);
+      color: white;
+      padding: 8px 16px;
+      z-index: 200;
+      text-decoration: none;
+      border-bottom-right-radius: var(--radius);
+      border-bottom-left-radius: var(--radius);
+      font-weight: 700;
+      transition: top 0.3s;
+    }
+    a.skip-link:focus {
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <a href="#game-container" class="skip-link">Skip to game</a>
+  <div id="app" role="application" aria-label="Mathematics game application">
+    <header id="app-header" role="banner">
+      <div class="brand" aria-label="Brand identity">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/582c1c6a-3c4b-48b7-bc5e-fb56f6f4f210.png" alt="Logo with letters M G for Math Game" draggable="false" loading="lazy" />
+        <h1>Math Game</h1>
+      </div>
+      <div id="header-controls">
+        <button id="sidebar-toggle" aria-label="Toggle sidebar navigation" aria-expanded="false" aria-controls="app-sidebar" class="btn"><span class="material-icons">menu</span></button>
+        <button id="theme-toggle" aria-label="Switch dark/light theme" class="btn" data-tooltip="Toggle dark or light mode">
+          <span class="material-icons" id="theme-icon" aria-hidden="true">dark_mode</span>
+          <span class="sr-only">Toggle theme</span>
+        </button>
+      </div>
+    </header>
+
+    <aside id="app-sidebar" role="navigation" aria-label="Main navigation">
+      <nav id="sidebar-nav">
+        <a href="#" class="active" tabindex="0">
+          <span class="material-icons" aria-hidden="true">calculate</span>
+          Play
+        </a>
+        <a href="#" tabindex="-1">
+          <span class="material-icons" aria-hidden="true">leaderboard</span>
+          Leaderboard
+          <span class="badge" aria-label="New leaderboard notification">3</span>
+        </a>
+        <a href="#" tabindex="-1">
+          <span class="material-icons" aria-hidden="true">info</span>
+          About
+        </a>
+        <a href="#" tabindex="-1">
+          <span class="material-icons" aria-hidden="true">settings</span>
+          Settings
+        </a>
+      </nav>
+      <div style="padding: var(--gap); user-select:none; font-size:0.85rem; color: var(--fg); opacity: 0.5;">
+        &copy; 2024 Math Game
+      </div>
+    </aside>
+
+    <main id="app-main" tabindex="0" role="main">
+      <section id="game-container" aria-live="polite" aria-atomic="true">
+        <h2>Mathematics Challenge</h2>
+        <p id="question" aria-label="Math question" tabindex="0" role="textbox"></p>
+        <input 
+          type="number" 
+          id="answer-input" 
+          aria-describedby="input-desc" 
+          aria-required="true" 
+          aria-invalid="false"
+          placeholder="Enter your answer" 
+          autocomplete="off"
+          inputmode="numeric"
+          aria-label="Answer input"
+          aria-live="off"
+        />
+        <div id="input-desc" class="sr-only">Enter the answer to the above math question and press Submit or Enter key</div>
+        <div id="game-buttons">
+          <button id="submit-btn" class="btn" aria-live="assertive" aria-describedby="result">Submit</button>
+          <button id="next-btn" class="btn" aria-disabled="true" disabled>Next</button>
+          <button id="reset-btn" class="btn" aria-label="Reset game">Reset</button>
+        </div>
+        <div id="result" role="alert" aria-live="assertive"></div>
+
+        <section id="stats" aria-label="Game statistics">
+          <div id="correct-count" tabindex="0">Correct: 0</div>
+          <div id="incorrect-count" tabindex="0">Incorrect: 0</div>
+          <div id="score" tabindex="0">Score: 0</div>
+        </section>
+      </section>
+    </main>
+
+    <footer id="app-footer" role="contentinfo">
+      <div id="status-indicator" aria-live="polite" aria-atomic="true">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Ready to play</span>
+      </div>
+      <div id="social-links" aria-label="Follow us on social media">
+        <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <span class="material-icons" aria-hidden="true">code</span>
+        </a>
+        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+          <span class="material-icons" aria-hidden="true">chat</span>
+        </a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <span class="material-icons" aria-hidden="true">business_center</span>
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions removals"></div>
+
+  <script>
+    (() => {
+      // Constants
+      const questionEl = document.getElementById('question');
+      const answerInput = document.getElementById('answer-input');
+      const submitBtn = document.getElementById('submit-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const resetBtn = document.getElementById('reset-btn');
+      const resultEl = document.getElementById('result');
+      const correctCountEl = document.getElementById('correct-count');
+      const incorrectCountEl = document.getElementById('incorrect-count');
+      const scoreEl = document.getElementById('score');
+      const toastEl = document.getElementById('toast');
+      const statusIndicator = document.getElementById('status-indicator');
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const sidebar = document.getElementById('app-sidebar');
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebarNavLinks = document.querySelectorAll('#sidebar-nav a');
+      const appMain = document.getElementById('app-main');
+
+      // Game data
+      let currentQuestion = null;
+      let correctAnswer = null;
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let score = 0;
+      let answered = false;
+      let userPreferences = {
+        theme: 'light',
+        sound: true,
+      };
+
+      // QUESTION GENERATOR
+      function generateQuestion() {
+        // Random math operator and operands
+        const operations = [
+          { symbol: '+', func: (a,b) => a + b },
+          { symbol: '-', func: (a,b) => a - b },
+          { symbol: '×', func: (a,b) => a * b },
+          { symbol: '÷', func: (a,b) => a / b }
+        ];
+        // Random difficulty levels affecting range
+        const difficulty = 1 + Math.floor(score / 5);
+        const max = 10 + difficulty * 10;
+
+        const op = operations[Math.floor(Math.random() * operations.length)];
+        let a = Math.floor(Math.random() * max) + 1;
+        let b = Math.floor(Math.random() * max) + 1;
+
+        // For division, make sure a divisible by b to get whole number results
+        if (op.symbol === '÷') {
+          a = a * b;
+        }
+
+        currentQuestion = `${a} ${op.symbol} ${b}`;
+        correctAnswer = op.func(a, b);
+
+        if (op.symbol === '÷') {
+          // Round for display but integer expected
+          correctAnswer = Math.round(correctAnswer);
+        }
+
+        updateQuestionUI();
+      }
+
+      function updateQuestionUI() {
+        questionEl.textContent = currentQuestion;
+        answerInput.value = '';
+        answerInput.setAttribute('aria-invalid', 'false');
+        answerInput.focus();
+        resultEl.textContent = '';
+        resultEl.className = '';
+        answered = false;
+        submitBtn.disabled = false;
+        nextBtn.disabled = true;
+        nextBtn.setAttribute('aria-disabled', 'true');
+      }
+
+      // Input validation & checking answer
+      function submitAnswer() {
+        if (answered) return;
+        let val = answerInput.value.trim();
+
+        if (val === '') {
+          // empty input error
+          answerInput.setAttribute('aria-invalid', 'true');
+          showToast('Please enter an answer.', 'error');
+          return;
+        }
+
+        let numVal = Number(val);
+        if (isNaN(numVal)) {
+          answerInput.setAttribute('aria-invalid', 'true');
+          showToast('Answer must be a number.', 'error');
+          return;
+        }
+
+        answerInput.setAttribute('aria-invalid', 'false');
+        answered = true;
+        submitBtn.disabled = true;
+        nextBtn.disabled = false;
+        nextBtn.setAttribute('aria-disabled', 'false');
+
+        if (Math.abs(numVal - correctAnswer) < 0.001) {
+          // Correct
+          correctCount++;
+          score += 10;
+          resultEl.textContent = 'Correct! Great job.';
+          resultEl.className = 'correct';
+          updateStatus('Correct answer');
+          if(userPreferences.sound) playSound('success');
+          showToast('Correct answer! +10 points', 'success');
+        } else {
+          // Wrong
+          incorrectCount++;
+          score -= 5;
+          if(score < 0) score = 0;
+          resultEl.textContent = `Incorrect. The correct answer was ${correctAnswer}.`;
+          resultEl.className = 'incorrect';
+          updateStatus('Wrong answer');
+          if(userPreferences.sound) playSound('error');
+          showToast(`Incorrect answer. Correct was ${correctAnswer}.`, 'error');
+        }
+        updateStats();
+      }
+      function updateStats() {
+        correctCountEl.textContent = `Correct: ${correctCount}`;
+        incorrectCountEl.textContent = `Incorrect: ${incorrectCount}`;
+        scoreEl.textContent = `Score: ${score}`;
+      }
+
+      function nextQuestion() {
+        generateQuestion();
+        answerInput.focus();
+      }
+
+      // Reset game
+      function resetGame() {
+        correctCount = 0;
+        incorrectCount = 0;
+        score = 0;
+        updateStats();
+        generateQuestion();
+        updateStatus('Game reset');
+        showToast('Game has been reset.', 'info');
+      }
+
+      // Toast notifications
+      let toastTimeout;
+      function showToast(message, type = 'info') {
+        toastEl.textContent = '';
+        toastEl.className = '';
+        toastEl.classList.add('show');
+        toastEl.textContent = message;
+
+        switch(type) {
+          case 'success':
+            toastEl.style.backgroundColor = 'var(--success)';
+            toastEl.style.color = 'white';
+            break;
+          case 'error':
+            toastEl.style.backgroundColor = 'var(--danger)';
+            toastEl.style.color = 'white';
+            break;
+          case 'info':
+          default:
+            toastEl.style.backgroundColor = 'var(--notify-bg)';
+            toastEl.style.color = 'var(--notify-fg)';
+            break;
+        }
+
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toastEl.classList.remove('show');
+        }, 3000);
+      }
+
+      // Status update
+      function updateStatus(text) {
+        statusIndicator.querySelector('span:nth-child(2)').textContent = text;
+      }
+
+      // Sound feedback
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      function playSound(type) {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if(type === 'success') {
+          osc.frequency.value = 880;
+          gain.gain.value = 0.15;
+          osc.type = 'triangle';
+        } else if(type === 'error') {
+          osc.frequency.value = 220;
+          gain.gain.value = 0.15;
+          osc.type = 'sawtooth';
+        }
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      }
+
+      // Theme toggle logic
+      function loadTheme() {
+        const savedTheme = localStorage.getItem('mathgame-theme');
+        if(savedTheme) {
+          applyTheme(savedTheme);
+          userPreferences.theme = savedTheme;
+        } else {
+          // Detect system preference
+          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          applyTheme(prefersDark ? 'dark' : 'light');
+          userPreferences.theme = prefersDark ? 'dark' : 'light';
+        }
+      }
+      function applyTheme(theme) {
+        if(theme === 'dark') {
+          document.documentElement.style.setProperty('--bg', '#0d1117');
+          document.documentElement.style.setProperty('--fg', '#c9d1d9');
+          document.documentElement.style.setProperty('--bg-glass', 'rgba(13 17 23 / 0.8)');
+          document.documentElement.style.setProperty('--shadow-glass', 'rgba(0 0 0 / 0.8)');
+          themeIcon.textContent = 'light_mode';
+          document.body.classList.add('dark');
+        } else {
+          document.documentElement.style.setProperty('--bg', '#ffffff');
+          document.documentElement.style.setProperty('--fg', '#24292e');
+          document.documentElement.style.setProperty('--bg-glass', 'rgba(255 255 255 / 0.75)');
+          document.documentElement.style.setProperty('--shadow-glass', 'rgba(0 0 0 / 0.05)');
+          themeIcon.textContent = 'dark_mode';
+          document.body.classList.remove('dark');
+        }
+        localStorage.setItem('mathgame-theme', theme);
+      }
+
+      // Sidebar toggle for mobile
+      function toggleSidebar() {
+        if(sidebar.classList.contains('open')) {
+          sidebar.classList.remove('open');
+          sidebarToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          sidebar.classList.add('open');
+          sidebarToggle.setAttribute('aria-expanded', 'true');
+          // Trap focus inside sidebar when open on mobile
+          sidebar.querySelector('a').focus();
+        }
+      }
+
+      // Keyboard shortcuts:
+      // Enter on answer input or Submit triggers submit
+      // N or Right arrow triggers next question if available
+      // R triggers reset
+      // T toggles theme
+      // M toggles sidebar on mobile
+      document.addEventListener('keydown', e => {
+        if(document.activeElement === answerInput) {
+          if(e.key === 'Enter') {
+            e.preventDefault();
+            submitAnswer();
+          }
+        }
+        if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+          return; // avoid interfering with normal input
+        }
+        switch(e.key.toLowerCase()) {
+          case 'n':
+          case 'arrowright':
+            if(!nextBtn.disabled) {
+              e.preventDefault();
+              nextQuestion();
+            }
+            break;
+          case 'r':
+            e.preventDefault();
+            resetGame();
+            break;
+          case 't':
+            e.preventDefault();
+            themeToggleBtn.click();
+            break;
+          case 'm':
+            if(window.innerWidth < 768) {
+              e.preventDefault();
+              toggleSidebar();
+            }
+            break;
+        }
+      });
+
+      // Initialize
+      function init() {
+        loadTheme();
+        generateQuestion();
+        updateStats();
+        updateStatus('Ready to play');
+        // Event listeners
+        submitBtn.addEventListener('click', submitAnswer);
+        nextBtn.addEventListener('click', nextQuestion);
+        resetBtn.addEventListener('click', resetGame);
+        themeToggleBtn.addEventListener('click', () => {
+          userPreferences.theme = userPreferences.theme === 'light' ? 'dark' : 'light';
+          applyTheme(userPreferences.theme);
+          showToast(`Switched to ${userPreferences.theme} theme`, 'info');
+        });
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        // Clicking sidebar nav links sets active visually
+        sidebarNavLinks.forEach(link => {
+          link.addEventListener('click', e => {
+            e.preventDefault();
+            sidebarNavLinks.forEach(l => l.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            if(window.innerWidth < 768) {
+              toggleSidebar();
+              appMain.focus();
+            }
+            showToast(`Navigated to ${e.currentTarget.textContent.trim()}`, 'info');
+          });
+          // Manage tabindex for accessibility
+          link.addEventListener('keydown', e => {
+            if(e.key === 'Tab') {
+              // force loop in sidebar when open on mobile
+              if(sidebar.classList.contains('open')) {
+                if(e.shiftKey && e.currentTarget === sidebarNavLinks[0]) {
+                  e.preventDefault();
+                  sidebarNavLinks[sidebarNavLinks.length - 1].focus();
+                }
+                else if(!e.shiftKey && e.currentTarget === sidebarNavLinks[sidebarNavLinks.length - 1]) {
+                  e.preventDefault();
+                  sidebarNavLinks[0].focus();
+                }
+              }
+            }
+          });
+        });
+      }
+
+      // Run init after DOM ready
+      document.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
+
